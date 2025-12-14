@@ -24,7 +24,7 @@ It lists things like:
 
 <h3>What is the difference between a service’s enabled and active state in systemd?</h3>
 <p>
-    When systemd is <b>enabled</b>, this means that this service will be enabled after reboot automatically,
+    When systemd is <b>enabled</b>, this means that this service will be running after reboot automatically,
     <b>Active</b> in the otherhand, the system service is currently running but after reboot it is not.
 </p>
 
@@ -67,19 +67,19 @@ It lists things like:
 <h3>Create a cron job that runs a backup script every day at 2 AM.</h3>
 <ol>
     <li>crontab -e</li>
-    <li>* 2 * * * * /path/to/backup.sh >> /var/log/backup.log 2>&1 </li>
+    <li>* 2 * * * /path/to/backup.sh >> /var/log/backup.log 2>&1 </li>
     <li>chmod +x /path/to/backup.sh</li>
 </ol>
 
 <h3>Find and delete all files larger than 100MB under /var/log.</h3>
-<p>sudo find /var/log -type f -size +100 -delete</p>
+<p>sudo find /var/log -type f -size +100M -delete</p>
 
 <h3>Extend an LVM logical volume by 2GB and grow the filesystem.</h3>
-<p>sudo lvextend -L -r +2GB /dev/vgname/lvname</p>
+<p>sudo lvextend -L +2GB -r /dev/vgname/lvname</p>
 
 <h3>Block outgoing connections to port 3306 using firewalld.</h3>
 <p>
     sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" port port="3306" protocol="tcp" direction="out" reject'
-    firewall-cmd --reload
+    sudo firewall-cmd --reload
 </p>
 

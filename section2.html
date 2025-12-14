@@ -12,11 +12,12 @@ what this script does. Modify it to move “large” logs into /var/log/archive.
 </h4>
 
 <p>
-    it loops through all *.all files in the log folder, and checks how many lines,
+    it loops through *.log files in the log folder, and checks how many lines,
     if the file has more than 1000 lines it prints a massage "filename is large"
 </p>
 
 <h3>Modified version</h3>
+<!-- Ensure the directory exists: mkdir -p /var/log/archive -->
 <p>
     for file in *.log; do
     size=$(wc -l < "$file")
@@ -33,7 +34,7 @@ done
 <h3>Script that checks if a service is running; if not, restarts it.</h3>
 <p>
     service_name="sshd"   # change this to the service you want to check
-    if ! systemctl is_active "$service_name"; then
+    if ! systemctl is-active --quiet  "$service_name"; then
         systemctl restart "$service_name"
     fi
 </p>
@@ -45,10 +46,10 @@ while true; do
     read -p "Enter a number (or q to quit): " num
 
     #quit option
-    ["$num" = "q"] && break
+    [ "$num" = "q" ] && break
 
     #validate integer
-    if ! [["$num" =~ ^-?[0-9]+$ ]]
+    if ! [[ "$num" =~ ^-?[0-9]+$ ]]
         echo "Not an Integer"
         continue
     fi
@@ -67,7 +68,7 @@ THRESHHOLD=80
 
 df -hP | awk 'NR>1 {print $5 " " $6}' | while read use mount; do 
     percent=${use%\%}
-    if ["$percent" -gt "$THRESHHOLD"]; then
+    if [ "$percent" -ge "$THRESHHOLD" ]; then
         echo "ALERT: $mount is at ${percent}% usage"
     fi
 done
