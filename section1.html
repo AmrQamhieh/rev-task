@@ -1,0 +1,85 @@
+<h1>SECTION 1 — Linux / RHEL 9 Basics</h1>
+<h1>Quiz A — Short Questions</h1>
+
+<h3>What does setenforce 0 do on an SELinux-enabled system?</h3>
+<p>setting setenfore 0 puts SELinux into permissive mode, in this mode SElinux doesn't block any actions,
+it only gives warning logs of what would have been blocked if the SElinux is in Enforcing mode.</p>
+ 
+<h3>Explain the difference between /etc/hosts and DNS</h3>
+<p>
+    /etc/hosts: it a local list of the hostnames and ip addresses localy
+    DNS: it's a global distributed phone book for the internet, 
+    it converts domain names like www.google.com into an IP address
+</p>
+
+<h3>What is the purpose of /etc/fstab?</h3>
+it's a configuration file that tells which filesystems to mount at boot and how to mount them. 
+It lists things like:
+<ul>
+    <li>disk partitions </li>
+    <li>network drivers</li>
+    <li>USB Drivers</li>
+    <li>Special filesystems like tmpfs</li>
+</ul>
+
+<h3>What is the difference between a service’s enabled and active state in systemd?</h3>
+<p>
+    When systemd is <b>enabled</b>, this means that this service will be enabled after reboot automatically,
+    <b>Active</b> in the otherhand, the system service is currently running but after reboot it is not.
+</p>
+
+<h3>How do you check which process is using a specific port (e.g., 8080)?</h3>
+<p> ss -tulpn | grep :8080 <u>or</u> netstat -tupln | grep :8080 </p>
+
+<h3>What’s the difference between su and sudo?</h3>
+<p>
+    su is for switching into another user, changing your current shell into another user's account
+    sudo in the other, stands for "super user do", it lets you run one command with elevated privilleges,
+    access is controlled by /etc/sudoers file 
+
+</p>
+
+<h3>What’s the difference between firewalld zones and services?</h3>
+<p>
+    Firewalld zones define the trust level for a network interface or source address range
+    Services on the otherhand, they are set of rules representing a common network service.
+    (e.g ssh)
+</p>
+
+<h3>What command shows the last 100 lines of a file and keeps following new lines live?</h3>
+<p>
+    tail -n 100 -f path/to/file
+</p>
+<h3>What is the default target of systemd equivalent to runlevel 3?</h3>
+<p>multi-user.target</p>
+
+--------------------------------------------------------------------------------------------------------
+
+<h1>Quiz B — Practical Tasks</h1>
+
+<h3>Create a user with a home directory, set a password, and add them to the wheel group.</h3>
+<ol>
+    <li>sudo useradd -m username</li>
+    <li>sudo passwd username</li>
+    <li>usermod -aG wheel username</li>
+</ol>
+
+<h3>Create a cron job that runs a backup script every day at 2 AM.</h3>
+<ol>
+    <li>crontab -e</li>
+    <li>* 2 * * * * /path/to/backup.sh >> /var/log/backup.log 2>&1 </li>
+    <li>chmod +x /path/to/backup.sh</li>
+</ol>
+
+<h3>Find and delete all files larger than 100MB under /var/log.</h3>
+<p>sudo find /var/log -type f -size +100 -delete</p>
+
+<h3>Extend an LVM logical volume by 2GB and grow the filesystem.</h3>
+<p>sudo lvextend -L -r +2GB /dev/vgname/lvname</p>
+
+<h3>Block outgoing connections to port 3306 using firewalld.</h3>
+<p>
+    sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" port port="3306" protocol="tcp" direction="out" reject'
+    firewall-cmd --reload
+</p>
+

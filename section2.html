@@ -1,0 +1,76 @@
+<h1>SECTION 2 — Bash Scripting</h1>
+<h1>Quiz A — Code Reading</h1>
+<h3>
+Given the script:
+for file in *.log; do
+    size=$(wc -l < "$file")
+    [ "$size" -gt 1000 ] && echo "$file is large"
+done 
+</h3>
+<h4>
+what this script does. Modify it to move “large” logs into /var/log/archive.
+</h4>
+
+<p>
+    it loops through all *.all files in the log folder, and checks how many lines,
+    if the file has more than 1000 lines it prints a massage "filename is large"
+</p>
+
+<h3>Modified version</h3>
+<p>
+    for file in *.log; do
+    size=$(wc -l < "$file")
+    if [ "$size" -gt 1000 ]; then
+        mv "$file" /var/log/archive
+    fi
+done 
+</p>
+
+
+
+
+<h1>Quiz B — Write Small Scripts</h1>
+<h3>Script that checks if a service is running; if not, restarts it.</h3>
+<p>
+    service_name="sshd"   # change this to the service you want to check
+    if ! systemctl is_active "$service_name"; then
+        systemctl restart "$service_name"
+    fi
+</p>
+<h3>Script that reads input from user, validates it is an integer, and sums numbers in a loop.</h3>
+<p>
+sum=0;
+
+while true; do
+    read -p "Enter a number (or q to quit): " num
+
+    #quit option
+    ["$num" = "q"] && break
+
+    #validate integer
+    if ! [["$num" =~ ^-?[0-9]+$ ]]
+        echo "Not an Integer"
+        continue
+    fi
+
+    sum=$((sum+num))
+    echo "Current Sum: $num"
+done
+
+echo "Final Sum: $num"
+</p>
+
+
+<h3>Script that monitors disk usage and sends alert if a partition exceeds 80%.</h3>
+<p>
+THRESHHOLD=80
+
+df -hP | awk 'NR>1 {print $5 " " $6}' | while read use mount; do 
+    percent=${use%\%}
+    if ["$percent" -gt "$THRESHHOLD"]; then
+        echo "ALERT: $mount is at ${percent}% usage"
+    fi
+done
+</p>
+<h3>Script that compresses all files older than 7 days in /tmp.</h3>
+<p> find /tmp -type f -mtime +7 -exec gzip {} \;</p>
